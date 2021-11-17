@@ -740,20 +740,6 @@ func (s *Server) JetStreamEnabledForDomain() bool {
 	return jsFound
 }
 
-// Helper to see if we have a non-empty domain defined in any server we know about.
-func (s *Server) jetStreamHasDomainConfigured() bool {
-	var found bool
-	s.nodeToInfo.Range(func(k, v interface{}) bool {
-		if v.(nodeInfo).domain != _EMPTY_ {
-			found = true
-			return false
-		}
-		return true
-	})
-
-	return found
-}
-
 // Will migrate off ephemerals if possible.
 // This means parent stream needs to be replicated.
 func (s *Server) migrateEphemerals() {
@@ -2190,7 +2176,7 @@ func validateJetStreamOptions(o *Options) error {
 					}
 				}
 				if !found {
-					return fmt.Errorf("In non operator mode, `default_js_domain` references non existing account %q", a)
+					return fmt.Errorf("in non operator mode, `default_js_domain` references non existing account %q", a)
 				}
 			}
 		} else {
@@ -2206,7 +2192,7 @@ func validateJetStreamOptions(o *Options) error {
 				sacc = o.SystemAccount
 			}
 			if a == sacc {
-				return fmt.Errorf("System account %q can not be in default_js_domain", a)
+				return fmt.Errorf("system account %q can not be in default_js_domain", a)
 			}
 			if d == _EMPTY_ {
 				continue
